@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 Console.WriteLine("CrossApp – практикум з крос-платформного програмування");
 Console.WriteLine("Студент: Пустовіт М.Д., група ФЕІ-34");
