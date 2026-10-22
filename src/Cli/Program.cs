@@ -1,33 +1,26 @@
-﻿using System.Text.Json;
-using Core;
+﻿using Core.Dto;
+using Core.Import;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-bool jsonMode = args.Contains("--json");
+string path = args.Length > 0 ? args[0] : Path.Combine("data", "sample.csv");
 
-EnvironmentReport report = EnvironmentInfo.Collect();
+if (!File.Exists(path))
+{
+    Console.WriteLine($"Файл не знайдено: {Path.GetFullPath(path)}");
+    return 1;
+}
 
-if (jsonMode)
+ImportResult<BookDto> result = BookCsvImporter.Load(path);
+
+Console.WriteLine($"Завантажено записів: {result.Items.Count}");
+foreach (BookDto b in result.Items.Take(5))
+    Console.WriteLine($" {b.Id,-6} {b.Isbn,-18} {b.Title,-30} {b.Year,5} {b.Author}");
+
+if (result.Errors.Count > 0)
 {
-    var jsonOptions = new JsonSerializerOptions
-    {
-        WriteIndented = true,
-        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
-    };
-    Console.WriteLine(JsonSerializer.Serialize(report, jsonOptions));
+    Console.WriteLine($"Пропущено рядків: {result.Errors.Count}");
+    foreach (string e in result.Errors)
+        Console.WriteLine($" ! {e}");
 }
-else
-{
-    Console.WriteLine("CrossApp – практикум з крос-платформного програмування");
-    Console.WriteLine("Студент: Пустовіт М.Д., група ФЕІ-34");
-    Console.WriteLine(new string('-', 52));
-    Console.WriteLine($"ОС (OSDescription)  : {report.OsDescription}");
-    Console.WriteLine($"ОС (Environment)    : {report.OsVersion}");
-    Console.WriteLine($"Архітектура процесу : {report.Architecture}");
-    Console.WriteLine($"Версія .NET (CLR)   : {report.DotnetVersion}");
-    Console.WriteLine($"Runtime             : {report.Runtime}");
-    Console.WriteLine($"Каталог застосунку  : {report.AppDirectory}");
-    Console.WriteLine($"Поточний каталог    : {report.CurrentDirectory}");
-    Console.WriteLine(new string('-', 52));
-    Console.WriteLine($"Предметна область: {report.Domain} — облік видач примірників книг читачам");
-}
+return 0;
