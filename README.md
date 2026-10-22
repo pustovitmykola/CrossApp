@@ -63,3 +63,14 @@ dotnet run --project src/Cli
 
 Після імпорту виводиться статистика: усього / прийнято / пропущено / % помилок.
 
+## Лабораторна 4 — доменна модель (Бібліотека)
+
+Інваріанти:
+- Id примірника, Id видачі, ISBN, Id читача не порожні — `ArgumentException` — `BookCopy.Create`, `Loan.Open`, `Loan.FromDto`
+- Примірник не можна видати повторно — `InvalidOperationException` — `BookCopy.Issue`
+- Примірник не можна повернути, якщо він не виданий — `InvalidOperationException` — `BookCopy.Return`
+- Дата повернення не раніша за дату видачі — `ArgumentOutOfRangeException` — `Loan.Close`, `Loan.FromDto`
+- Закриту видачу не можна змінювати повторно — `InvalidOperationException` — `Loan.Close`, `Loan.MarkLost`
+- Дозволені переходи Open→Returned, Open→Lost, Lost→Returned — `InvalidOperationException` — `Loan.EnsureTransition`
+- Не більше 5 відкритих видач на читача — `InvalidOperationException` — `LendingService.IssueCopy`
+- ISBN книги має містити 10 або 13 цифр — `ArgumentException` — `Book.Create`

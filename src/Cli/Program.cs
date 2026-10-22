@@ -3,6 +3,10 @@ using Core.Import;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+// Лабораторна 4: демонстрація доменної моделі
+if (args.Contains("--domain")) { Cli.DomainDemo.Run(); return 0; }
+if (args.Contains("--extra")) { Cli.DomainDemo.RunExtra(); return 0; }
+
 // Використання: Cli [шлях] [--mixed]
 //   .csv  -> BookCsvImporter, .json -> BookJsonImporter
 //   --mixed -> файл із префіксами типів (B;... книги, R;... читачі)
@@ -26,7 +30,7 @@ if (mixed)
         Console.WriteLine($" [читач] {r.Id,-6} {r.FullName,-24} {r.Email}");
 
     PrintErrors(m.Errors);
-        Console.WriteLine(m.Stats);
+    Console.WriteLine(m.Stats);
     return 0;
 }
 
