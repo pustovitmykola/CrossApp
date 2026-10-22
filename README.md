@@ -51,4 +51,15 @@ dotnet run --project src/Cli
     dotnet run --project src/Cli
     dotnet run --project src/Cli -- data/broken.csv
     
+    ## Додаткові формати (lab03, додаткове завдання)
+
+- `data/sample.json` — масив JSON-об'єктів `BookDto`; імпортер обирається за розширенням (`.csv` / `.json`)
+- `data/mixed.csv` — рядки з префіксом типу: `B;id;isbn;title;year[;author]` — книга, `R;id;fullName[;email]` — читач
+
+Запуск:
+
+    dotnet run --project src/Cli -- data/sample.json
+    dotnet run --project src/Cli -- data/mixed.csv --mixed
+
+Після імпорту виводиться статистика: усього / прийнято / пропущено / % помилок.
 
