@@ -1,4 +1,4 @@
-using Core.Dto;
+﻿using Core.Dto;
 using Core.Import;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -8,7 +8,8 @@ if (args.Contains("--domain")) { Cli.DomainDemo.Run(); return 0; }
 if (args.Contains("--extra")) { Cli.DomainDemo.RunExtra(); return 0; }
 if (args.Contains("--lending")) { Cli.LendingDemo.Run(args); return 0; }
 if (args.Contains("--storage-extra")) { Cli.StorageExtraDemo.Run(); return 0; }
-
+if (args.Contains("--events")) { Cli.EventsDemo.Run(args); return 0; }
+if (args.Contains("--events-extra")) { Cli.EventsExtraDemo.Run(args); return 0; }
 // Використання: Cli [шлях] [--mixed]
 //   .csv  -> BookCsvImporter, .json -> BookJsonImporter
 //   --mixed -> файл із префіксами типів (B;... книги, R;... читачі)
