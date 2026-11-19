@@ -62,7 +62,7 @@ public static class DomainDemo
 
         Console.WriteLine();
         Console.WriteLine("=== Додатково 2: ліміт видач читача ===");
-        var service = new LendingService();
+        var service = new LendingService(new Core.Storage.InMemoryBookCopyStore());
         var copies = Enumerable.Range(1, 6)
             .Select(i => BookCopy.Create($"C-{i:00}", "9780132350884")).ToList();
         for (var i = 0; i < 5; i++)

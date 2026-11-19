@@ -1,4 +1,4 @@
-﻿using Core.Dto;
+using Core.Dto;
 using Core.Import;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -6,6 +6,8 @@ Console.OutputEncoding = System.Text.Encoding.UTF8;
 // Лабораторна 4: демонстрація доменної моделі
 if (args.Contains("--domain")) { Cli.DomainDemo.Run(); return 0; }
 if (args.Contains("--extra")) { Cli.DomainDemo.RunExtra(); return 0; }
+if (args.Contains("--lending")) { Cli.LendingDemo.Run(args); return 0; }
+if (args.Contains("--storage-extra")) { Cli.StorageExtraDemo.Run(); return 0; }
 
 // Використання: Cli [шлях] [--mixed]
 //   .csv  -> BookCsvImporter, .json -> BookJsonImporter

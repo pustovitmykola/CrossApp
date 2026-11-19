@@ -74,3 +74,8 @@ dotnet run --project src/Cli
 - Дозволені переходи Open→Returned, Open→Lost, Lost→Returned — `InvalidOperationException` — `Loan.EnsureTransition`
 - Не більше 5 відкритих видач на читача — `InvalidOperationException` — `LendingService.IssueCopy`
 - ISBN книги має містити 10 або 13 цифр — `ArgumentException` — `Book.Create`
+## Лаб. 5: сховище
+IBookCopyStore: контракт сховища (List, GetById, Add, Update, Remove).
+Реалізації: InMemoryBookCopyStore (в пам'яті) і FileBookCopyStore (JSON-файл).
+LendingService залежить лише від інтерфейсу, сховище вибирається в LendingDemo (ручний DI).
+Запуск: dotnet run --project src/Cli -- --lending [--file]
