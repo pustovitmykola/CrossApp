@@ -59,9 +59,9 @@ public sealed class Loan
     private void EnsureTransition(LoanStatus to)
     {
         if (Status == LoanStatus.Returned)
-            throw new InvalidOperationException($"Видача {Id} вже закрита, змінювати її не можна");
+            throw new DomainException($"Видача {Id} вже закрита, змінювати її не можна");
         if (!IsAllowed(Status, to))
-            throw new InvalidOperationException(
+            throw new DomainException(
                 $"Видача {Id}: перехід {Status} → {to} заборонений");
     }
 
@@ -101,7 +101,7 @@ public sealed class Loan
             throw new ArgumentOutOfRangeException(nameof(dto), returned,
                 $"Дата повернення {returned:yyyy-MM-dd} раніша за дату видачі {dto.IssuedOn:yyyy-MM-dd}");
         if (status != LoanStatus.Returned && !copy.IsIssued)
-            throw new InvalidOperationException(
+            throw new DomainException(
                 $"Видача {dto.Id} не закрита, але примірник {copy.Id} вільний");
 
         return new Loan(dto.Id.Trim(), copy, dto.ReaderId.Trim(), dto.IssuedOn, dto.ReturnedOn, status);

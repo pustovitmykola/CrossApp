@@ -105,3 +105,10 @@ $text = @'
 git add .
 git commit -m "lab07: LINQ reports (top readers, overdue, books by decade, copy totals), deferred execution demo"
 git push
+## Лабораторна робота 8. Тести та асинхронний імпорт
+
+Тести: `tests/Core.Tests` (xUnit, посилається лише на Core), запуск `dotnet test`. Порушення бізнес-правил кидають `DomainException`, некоректні аргументи лишаються за `ArgumentException`.
+
+Асинхронний імпорт: `LendingService.ImportAsync(ICopyImporter, path, progress, ct)`. Читання й перевірка всього файлу відбуваються до змін у сховищі (все або нічого); примірники з уже наявним id пропускаються (ідемпотентність). `JsonCopyImporter` читає через `FileStream` з `useAsync: true`.
+
+Запуск демо: `dotnet run --project src/Cli -- --async [файл.json] [--slow] [--timeout N] [--stream]`. Ctrl+C і таймаут скасовують імпорт; коди виходу: 0 успіх, 3 скасовано, 4 доменна помилка, 5 технічна помилка.

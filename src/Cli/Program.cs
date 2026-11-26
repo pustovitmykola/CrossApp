@@ -1,9 +1,12 @@
-﻿using Core.Dto;
+using Core.Dto;
 using Core.Import;
 
 if (args.Length > 0 && args[0].StartsWith("report-")) { ReportsDemo.Run(args[0]); return 0; }
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+// Лабораторна 8: асинхронний імпорт зі скасуванням (top-level await)
+if (args.Contains("--async")) return await Cli.AsyncDemo.RunAsync(args);
 
 // Лабораторна 4: демонстрація доменної моделі
 if (args.Contains("--domain")) { Cli.DomainDemo.Run(); return 0; }

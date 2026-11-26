@@ -59,7 +59,7 @@ public class FileBookCopyStore : IBookCopyStore
         ArgumentNullException.ThrowIfNull(item);
         var items = EnsureLoaded();
         if (items.ContainsKey(item.Id))
-            throw new InvalidOperationException($"Примірник з id {item.Id} вже існує");
+            throw new DomainException($"Примірник з id {item.Id} вже існує");
         items[item.Id] = item;
         Flush();
     }
@@ -69,7 +69,7 @@ public class FileBookCopyStore : IBookCopyStore
         ArgumentNullException.ThrowIfNull(item);
         var items = EnsureLoaded();
         if (!items.ContainsKey(item.Id))
-            throw new InvalidOperationException($"Примірник {item.Id} не знайдено, оновлювати нічого");
+            throw new DomainException($"Примірник {item.Id} не знайдено, оновлювати нічого");
         items[item.Id] = item;
         Flush();
     }
@@ -78,7 +78,7 @@ public class FileBookCopyStore : IBookCopyStore
     {
         var items = EnsureLoaded();
         if (!items.Remove(id))
-            throw new InvalidOperationException($"Примірник {id} не знайдено, видаляти нічого");
+            throw new DomainException($"Примірник {id} не знайдено, видаляти нічого");
         Flush();
     }
 }

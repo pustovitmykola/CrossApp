@@ -24,7 +24,7 @@ public class InMemoryBookCopyStore : IBookCopyStore
     {
         ArgumentNullException.ThrowIfNull(item);
         if (_items.ContainsKey(item.Id))
-            throw new InvalidOperationException($"Примірник з id {item.Id} вже існує");
+            throw new DomainException($"Примірник з id {item.Id} вже існує");
         _items[item.Id] = item;
     }
 
@@ -32,13 +32,13 @@ public class InMemoryBookCopyStore : IBookCopyStore
     {
         ArgumentNullException.ThrowIfNull(item);
         if (!_items.ContainsKey(item.Id))
-            throw new InvalidOperationException($"Примірник {item.Id} не знайдено, оновлювати нічого");
+            throw new DomainException($"Примірник {item.Id} не знайдено, оновлювати нічого");
         _items[item.Id] = item;
     }
 
     public void Remove(string id)
     {
         if (!_items.Remove(id))
-            throw new InvalidOperationException($"Примірник {id} не знайдено, видаляти нічого");
+            throw new DomainException($"Примірник {id} не знайдено, видаляти нічого");
     }
 }

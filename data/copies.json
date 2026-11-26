@@ -1,0 +1,7 @@
+[
+  { "Id": "C-101", "Isbn": "9780132350884", "IsIssued": false },
+  { "Id": "C-102", "Isbn": "9789660000001", "IsIssued": false },
+  { "Id": "C-103", "Isbn": "9789660000005", "IsIssued": false },
+  { "Id": "C-104", "Isbn": "9789660000013", "IsIssued": false },
+  { "Id": "C-105", "Isbn": "9789660000002", "IsIssued": false }
+]
