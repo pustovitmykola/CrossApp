@@ -79,3 +79,29 @@ IBookCopyStore: контракт сховища (List, GetById, Add, Update, Rem
 Реалізації: InMemoryBookCopyStore (в пам'яті) і FileBookCopyStore (JSON-файл).
 LendingService залежить лише від інтерфейсу, сховище вибирається в LendingDemo (ручний DI).
 Запуск: dotnet run --project src/Cli -- --lending [--file]
+$text = @'
+
+## Лабораторна робота 7. Звіти через LINQ
+
+Звіти реалізовано в `Core/Reports/ReportService.cs` (статичний клас, лише LINQ to Objects). Кожен метод приймає `IEnumerable<T>`, повертає `IReadOnlyList` з DTO та закінчується `ToList()`.
+
+| Команда | Звіт | Оператори |
+| --- | --- | --- |
+| `report-top` | топ-N читачів за кількістю видач | GroupBy, Select, OrderByDescending, ThenBy, Take |
+| `report-overdue` | прострочені видачі | Where, Select (DTO), Where, OrderByDescending, ThenBy |
+| `report-groups` | видання за десятиліттям | GroupBy, OrderBy, Select |
+| `report-sum` | агрегати за примірниками | GroupBy, Select, Count, Average, Max |
+| `report-deferred` | демо відкладеного виконання | Where, Count, ToList |
+| `report-empty` | звіти на порожньому джерелі | усі звіти |
+
+Запуск: `dotnet run --project src/Cli -- report-top`.
+
+### Відкладене виконання
+
+Запит `Where` лише описується в момент оголошення і виконується тоді, коли його перебирають або викликають завершальний оператор. У `report-deferred` перший `Count()` дає 8, після додавання примірника в джерело другий `Count()` виконує запит заново і дає 9, бо запит завжди бачить поточний стан джерела. `ToList()` виконує запит один раз і відв'язує результат від джерела: знімок містить 9 елементів і не змінюється після `Clear()`, тоді як сам запит після очищення бачить 0.
+'@
+[System.IO.File]::AppendAllText("$PWD\README.md", $text, [System.Text.UTF8Encoding]::new($false))
+
+git add .
+git commit -m "lab07: LINQ reports (top readers, overdue, books by decade, copy totals), deferred execution demo"
+git push
