@@ -6,13 +6,11 @@ public static class ReportService
 {
     public const int LoanPeriodDays = 14; // як у LendingService: дата видачі + 14 днів
 
-    // Топ-N читачів: групування + стабільне сортування (другий ключ ReaderId)
+    // Топ-N читачів: групування + TopBy (стабільне сортування, другий ключ ReaderId)
     public static IReadOnlyList<ReaderLoanCount> TopReaders(IEnumerable<Loan> loans, int n) =>
         loans.GroupBy(l => l.ReaderId)
              .Select(g => new ReaderLoanCount(g.Key, g.Count(), g.Count(l => l.Status == LoanStatus.Open)))
-             .OrderByDescending(r => r.Total)
-             .ThenBy(r => r.ReaderId, StringComparer.Ordinal)
-             .Take(n)
+             .TopBy(r => r.Total, n, r => r.ReaderId)
              .ToList();
 
     // Прострочені: фільтр -> проєкція в DTO -> фільтр -> сортування; today передається параметром
@@ -43,4 +41,27 @@ public static class ReportService
         return new CopyStats(perBook.Count, list.Count, list.Count(c => c.IsIssued),
                              perBook.Average(), perBook.Max());
     }
+
+    // ДОДАТКОВО: GroupJoin (як LEFT JOIN) - видання без примірників не зникають, а лишаються з нулями
+    public static IReadOnlyList<BookAvailabilityLine> BookAvailability(
+        IEnumerable<Book> books, IEnumerable<BookCopy> copies) =>
+        books.GroupJoin(copies,
+                        b => b.Isbn,
+                        c => c.Isbn,
+                        (b, cs) => new BookAvailabilityLine(b.Title, cs.Count(), cs.Count(c => !c.IsIssued)))
+             .OrderBy(x => x.Free)
+             .ThenBy(x => x.Title, StringComparer.Ordinal)
+             .ToList();
+
+    // ДОДАТКОВО: Join (як INNER JOIN) - видачі групуються за ISBN і з'єднуються з виданнями, далі топ-N через TopBy
+    public static IReadOnlyList<TitleLoanCount> PopularTitles(
+        IEnumerable<Loan> loans, IEnumerable<Book> books, int n) =>
+        loans.GroupBy(l => l.Copy.Isbn)
+             .Select(g => new { Isbn = g.Key, Count = g.Count() })
+             .Join(books,
+                   x => x.Isbn,
+                   b => b.Isbn,
+                   (x, b) => new TitleLoanCount(b.Isbn, b.Title, x.Count))
+             .TopBy(t => t.Loans, n, t => t.Isbn)
+             .ToList();
 }

@@ -46,8 +46,33 @@ public static class ReportsDemo
                 Console.WriteLine($"TopReaders: {ReportService.TopReaders(new List<Loan>(), 5).Count}");
                 Console.WriteLine($"Overdue: {ReportService.Overdue(new List<Loan>(), today).Count}");
                 Console.WriteLine($"BooksByDecade: {ReportService.BooksByDecade(new List<Book>()).Count}");
+                Console.WriteLine($"BookAvailability: {ReportService.BookAvailability(new List<Book>(), new List<BookCopy>()).Count}");
+                Console.WriteLine($"PopularTitles: {ReportService.PopularTitles(new List<Loan>(), new List<Book>(), 5).Count}");
                 var e = ReportService.CopyTotals(new List<BookCopy>());
                 Console.WriteLine($"CopyTotals: видань {e.Books}, примірників {e.Copies}, середнє {e.AvgPerBook:F2}, максимум {e.MaxPerBook}");
+                break;
+
+            // ----- додаткове завдання -----
+            case "report-join":
+                foreach (var b in ReportService.BookAvailability(data.Books, data.Copies))
+                    Console.WriteLine($"{b.Title,-34} примірників: {b.Copies,2}  вільних: {b.Free,2}");
+                break;
+
+            case "report-popular":
+                foreach (var t in ReportService.PopularTitles(data.Loans, data.Books, 5))
+                    Console.WriteLine($"{t.Isbn}  {t.Title,-24} видач: {t.Loans,2}");
+                break;
+
+            case "report-compare":
+                var m = ReportService.BooksByDecade(data.Books);
+                var q = ReportVariants.BooksByDecadeQuery(data.Books);
+                Console.WriteLine($"груп (методний синтаксис): {m.Count}");
+                Console.WriteLine($"груп (запитний синтаксис): {q.Count}");
+                Console.WriteLine($"результати однакові: {m.SequenceEqual(q)}");
+                break;
+
+            case "report-bench":
+                ReportBench.Run();
                 break;
 
             default:
